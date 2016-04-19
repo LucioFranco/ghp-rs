@@ -1,5 +1,3 @@
-extern crate git2;
-
 mod import;
 mod error;
 

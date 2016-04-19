@@ -1,14 +1,19 @@
 extern crate getopts;
-extern crate git2;
 
 use getopts::Options;
 
 use std::{env, process};
 
 mod import;
+mod error;
 
 fn print_version() {
     println!("0.1.0");
+}
+
+fn print_usage(opt: Options) {
+    let usage = "ghp [OPTIONS] DIRECTORY";
+    println!("{}", opt.usage(usage));
 }
 
 fn main() {
@@ -17,16 +22,16 @@ fn main() {
 
     let mut opts = Options::new();
 
-    opts.optopt("p",
-                "path",
-                "set path that will be transplanted to the gh-pages branch",
-                "");
+    opts.optopt("b",
+                "branch",
+                "set branch that the files will be imported to",
+                "gh-pages");
 
     opts.optflag("h", "help", "print the help menu");
     opts.optflag("v", "version", "print current version number");
 
     // TODO: Handle this with a better error message that
-    //         will direct people to the gh issues.
+    //         will direct people to the gh issues of the project.
     let matches = match opts.parse(&args[1..]) {
         Ok(m) => m,
         Err(f) => panic!(f.to_string()),
@@ -42,7 +47,16 @@ fn main() {
         process::exit(0);
     }
 
-    if let Some(path) = matches.opt_str("p") {
-        import::import_dir(&path);
+
+    let branch = match matches.opt_str("b") {
+        Some(path) => path,
+        None => String::from("gh-pages"),
+    };
+
+    if matches.free.is_empty() {
+        print_usage(opts);
+        process::exit(1);
     }
+
+    import::import_dir(&matches.free[0], &branch);
 }
