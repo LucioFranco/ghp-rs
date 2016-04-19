@@ -5,7 +5,7 @@ use getopts::Options;
 
 use std::{env, process};
 
-// mod import;
+mod import;
 
 fn print_version() {
     println!("0.1.0");
@@ -40,5 +40,9 @@ fn main() {
     if matches.opt_present("v") {
         print_version();
         process::exit(0);
+    }
+
+    if let Some(path) = matches.opt_str("p") {
+        import::import_dir(&path);
     }
 }
