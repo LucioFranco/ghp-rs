@@ -58,5 +58,8 @@ fn main() {
         process::exit(1);
     }
 
-    import::import_dir(&matches.free[0], &branch);
+    match import::import_dir(&matches.free[0], &branch) {
+        Err(ref err) => println!("{}", err),
+        _ => process::exit(0),
+    }
 }
