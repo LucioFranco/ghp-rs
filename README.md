@@ -1,6 +1,10 @@
 # ghp-rs
 Easily import a folder to your gh-pages branch!
 
+# TODO
+- [ ] Write tests with `tempdir`
+- [ ] Create `cargo-doc-upload`
+
 ## License
 
 Licensed under either of
