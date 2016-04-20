@@ -1,3 +1,5 @@
+#![crate_name = "ghp"]
+
 extern crate getopts;
 
 use getopts::Options;
