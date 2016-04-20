@@ -13,7 +13,7 @@ pub fn import_dir<P>(dir: P, branch: &str) -> Result<()>
                            .arg("--date-format=raw")
                            .arg("--quiet")
                            .stdin(Stdio::piped())
-                           .current_dir(dir.clone()) // TODO: this moves dir might not want to clone
+                           .current_dir(&dir)
                            .spawn());
 
 
@@ -22,7 +22,7 @@ pub fn import_dir<P>(dir: P, branch: &str) -> Result<()>
         None => return Err(Error::from("did not capture stdin")),
     };
 
-    let import = Import::new(stdin, dir);
+    let import = Import::new(stdin, &dir);
 
     try!(cmd.wait());
 
@@ -42,5 +42,15 @@ impl Import {
             stdin: stdin,
             dir: dir.as_ref().to_owned(),
         }
+    }
+
+    fn get_config(&self, key: &str) -> Result<String> {
+        let output = try!(Command::new("git")
+                              .arg("config")
+                              .arg(key)
+                              .current_dir(&self.dir)
+                              .output());
+
+        Ok(try!(String::from_utf8(output.stdout)))
     }
 }
