@@ -1,2 +1,4 @@
 #[test]
-fn basic() {}
+fn basic() {
+    assert!(true);
+}
