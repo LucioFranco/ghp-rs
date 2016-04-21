@@ -10,4 +10,6 @@ matrix:
   allow_failures:
     - rust: nightly
 
-script: ./tests/test.sh
+script:
+  - cargo build -v
+  - ./tests/test.sh
