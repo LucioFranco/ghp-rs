@@ -56,6 +56,7 @@ impl Import {
         for entry in WalkDir::new(&self.dir) {
             let entry = entry.unwrap(); // TODO: Clean up unwrap
             if entry.metadata().unwrap().is_file() {
+                // TODO: Should make this a trace log and not a just a println
                 println!("adding {}", entry.path().display());
                 self.add_file(entry.path());
             }
@@ -93,9 +94,7 @@ impl Import {
     fn add_file<P>(&mut self, filename: P) -> Result<()>
         where P: AsRef<Path>
     {
-        // TODO: actually take file name and do something with it
-        // TODO: Clean all this up
-
+        // TODO: Clean up this method
         let filename = filename.as_ref();
 
 
@@ -110,9 +109,8 @@ impl Import {
             None => return Err(Error::from("could not convert string to utf8")),
         };
 
-        println!("adding this file {}", filename_str);
+        // TODO: need to allow the ability for executable files to be passed
         try!(self.write(&format!("M 100644 inline {}\n", filename_str)));
-
 
         let mut file = File::open(filename).unwrap();
 
