@@ -1,10 +1,12 @@
 #![crate_name = "ghp"]
 
 extern crate getopts;
+extern crate walkdir;
 
 use getopts::Options;
 
 use std::{env, process};
+use std::io::{Write, stderr};
 
 mod import;
 mod error;
@@ -61,7 +63,10 @@ fn main() {
     }
 
     match import::import_dir(&matches.free[0], &branch) {
-        Err(ref err) => println!("{}", err),
+        Err(ref err) => {
+            stderr().write_fmt(format_args!("Error: {}\n", err)).unwrap();
+            process::exit(1);
+        }
         _ => process::exit(0),
     }
 }

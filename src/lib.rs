@@ -1,3 +1,5 @@
+extern crate walkdir;
+
 mod import;
 mod error;
 

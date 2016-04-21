@@ -3,6 +3,7 @@ use std::process::{Command, Stdio, ChildStdin};
 use std::io::{Write, Read};
 use error::{Result, Error};
 use std::fs::File;
+use walkdir::WalkDir;
 
 pub fn import_dir<P>(dir: P, branch: &str) -> Result<()>
     where P: AsRef<Path> + Clone
@@ -24,7 +25,7 @@ pub fn import_dir<P>(dir: P, branch: &str) -> Result<()>
     };
 
     let mut import = Import::new(stdin, branch, &dir);
-    import.import();
+    try!(import.import());
 
     println!("done");
     try!(cmd.kill()); // TODO: Kill is so brutal. Should find a better way to end commit.
@@ -52,6 +53,14 @@ impl Import {
     pub fn import(&mut self) -> Result<()> {
         try!(self.start_commit());
 
+        for entry in WalkDir::new(&self.dir) {
+            let entry = entry.unwrap(); // TODO: Clean up unwrap
+            if entry.metadata().unwrap().is_file() {
+                println!("adding {}", entry.path().display());
+                self.add_file(entry.path());
+            }
+        }
+
         self.stdin.write("\n".as_bytes());
 
         Ok(())
@@ -69,15 +78,43 @@ impl Import {
 
         let message = "Message for days.";
         self.write(&format!("data {}\n{}\n", message.len(), message));
-        self.add_file("");
+
+        if let Ok(rev) = self.get_prev_commit() {
+            if rev.len() > 0 {
+                try!(self.write(&format!("from {}\n", &*rev.replace("\n", ""))));
+            }
+        }
+
+        try!(self.write("deleteall\n"));
+
         Ok(())
     }
 
-    fn add_file<P>(&mut self, file: P) -> Result<()>
+    fn add_file<P>(&mut self, filename: P) -> Result<()>
         where P: AsRef<Path>
     {
-        try!(self.write(&format!("M 100644 inline index.html\n")));
-        let mut file = File::open("build/index.html").unwrap();
+        // TODO: actually take file name and do something with it
+        // TODO: Clean all this up
+
+        let filename = filename.as_ref();
+
+
+        let dir = self.dir.clone();
+        let filename_rel = match filename.strip_prefix(&dir) {
+            Ok(path) => path,
+            _ => filename,
+        };
+
+        let filename_str = match filename_rel.to_str() {
+            Some(name) => name,
+            None => return Err(Error::from("could not convert string to utf8")),
+        };
+
+        println!("adding this file {}", filename_str);
+        try!(self.write(&format!("M 100644 inline {}\n", filename_str)));
+
+
+        let mut file = File::open(filename).unwrap();
 
         let len = file.metadata().unwrap().len();
         try!(self.write(&format!("data {}\n", len)));
@@ -89,6 +126,18 @@ impl Import {
         try!(self.write(&format!("\n")));
 
         Ok(())
+    }
+
+    fn get_prev_commit(&self) -> Result<String> {
+        let output = try!(Command::new("git")
+                              .current_dir(&self.dir)
+                              .arg("rev-list")
+                              .arg("--max-count=1")
+                              .arg(&self.branch)
+                              .arg("--")
+                              .output());
+
+        Ok(try!(String::from_utf8(output.stdout)))
     }
 
     fn write(&mut self, val: &str) -> Result<usize> {
