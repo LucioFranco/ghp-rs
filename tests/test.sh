@@ -9,9 +9,6 @@ function check_bundle() {
     exit 1
 }
 
-
-
-
 mkdir tmp
 cd tmp
 
