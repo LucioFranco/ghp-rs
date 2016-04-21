@@ -1,5 +1,6 @@
 use std::{result, error, fmt, io};
 use std::string::FromUtf8Error;
+use std::borrow::Cow;
 
 pub type Result<T> = result::Result<T, Error>;
 
@@ -25,6 +26,12 @@ impl From<FromUtf8Error> for Error {
 impl<'a> From<&'a str> for Error {
     fn from(err: &'a str) -> Error {
         Error::Other(err.to_owned())
+    }
+}
+
+impl<'a> From<Cow<'a, str>> for Error {
+    fn from(err: Cow<'a, str>) -> Error {
+        Error::Other(err.into_owned())
     }
 }
 
