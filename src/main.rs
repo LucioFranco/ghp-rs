@@ -30,6 +30,7 @@ fn main() {
                 "branch",
                 "set branch that the files will be imported to",
                 "gh-pages");
+    // TODO: Add -r remote name, -p push to remote , -m commit message, -f force push
 
     opts.optflag("h", "help", "print the help menu");
     opts.optflag("v", "version", "print current version number");
