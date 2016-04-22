@@ -1,38 +1,36 @@
-function check_bundle() {
-    if [ -f bundle.js ]
-    then
-	echo "Passed test #1"
-	return
-    fi
+source assertions.sh
 
-    echo "Failed test #1: could not find bundle.js in gh-pages branch"
-    exit 1
-}
+echo "Creating tmp directory..."
 
 mkdir tmp
 cd tmp
 
-echo "build" > .gitignore
-git commit -m "gitignore" -- .gitignore
+echo "\nAdding files..."
 
+echo "build" > .gitignore
 echo "<html></html>" > index.html
 mkdir css
 echo "// main css file" > css/main.css
 
+echo "\nCreating git repo with files..."
 
-git init
+git init > /dev/null
 git add --all
-git commit -m "inital commit"
+git commit -m "inital commit" > /dev/null
+
+echo "\nCreating build folder and files..."
 
 mkdir build
 echo "// a bunch of js bs" > build/bundle.js
+echo "# bash file" > build/run.sh
+chmod +x build/run.sh
 
-cargo run -- build
+echo "\nRunning command \"ghp build\"..."
+../../target/debug/ghp build
 
-sleep 2
 rm -rf build
 git checkout gh-pages
-check_bundle
+check_branch
 
 cd ..
 rm -rf tmp

@@ -3,6 +3,7 @@ use std::process::{Command, Stdio, ChildStdin};
 use std::io::{Write, Read};
 use error::{Result, Error};
 use std::fs::File;
+use std::os::unix::fs::PermissionsExt;
 use walkdir::WalkDir;
 
 pub fn import_dir<P>(dir: P, branch: &str) -> Result<()>
@@ -28,7 +29,7 @@ pub fn import_dir<P>(dir: P, branch: &str) -> Result<()>
     try!(import.import());
 
     println!("done");
-    try!(cmd.kill()); // TODO: Kill is so brutal. Should find a better way to end commit.
+    try!(cmd.kill());
 
     Ok(())
 }
@@ -36,7 +37,7 @@ pub fn import_dir<P>(dir: P, branch: &str) -> Result<()>
 struct Import {
     stdin: ChildStdin,
     branch: String,
-    dir: PathBuf, // TODO: Should prob make this just a reference
+    dir: PathBuf,
 }
 
 impl Import {
@@ -94,7 +95,6 @@ impl Import {
     fn add_file<P>(&mut self, filename: P) -> Result<()>
         where P: AsRef<Path>
     {
-        // TODO: Clean up this method
         let filename = filename.as_ref();
 
 
@@ -109,15 +109,20 @@ impl Import {
             None => return Err(Error::from("could not convert string to utf8")),
         };
 
-        // TODO: need to allow the ability for executable files to be passed
-        try!(self.write(&format!("M 100644 inline {}\n", filename_str)));
+        let mut file = try!(File::open(filename));
+        let metadata = try!(file.metadata());
+        let permissions = metadata.permissions();
+        println!("{:o}", (permissions.mode() & 0o700));
 
-        let mut file = File::open(filename).unwrap();
+        if permissions.mode() & 0o700 == 0o700 {
+            try!(self.write(&format!("M 100755 inline {}\n", filename_str)));
+        } else {
+            try!(self.write(&format!("M 100644 inline {}\n", filename_str)));
+        }
 
-        let len = file.metadata().unwrap().len();
-        try!(self.write(&format!("data {}\n", len)));
+        try!(self.write(&format!("data {}\n", metadata.len())));
 
-        let mut bytes = vec![0u8; len as usize];
+        let mut bytes = vec![0u8; metadata.len() as usize];
         try!(file.read(&mut bytes));
         try!(self.stdin.write(&mut bytes));
 
