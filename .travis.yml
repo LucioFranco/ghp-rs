@@ -12,4 +12,5 @@ matrix:
 
 script:
   - cargo build -v
-  - cd tests && ./test.sh
+  - git config user.name "Travis" && git config user.email "lucio.franco@du.edu" 
+  - cd test && ./test.sh
