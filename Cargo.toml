@@ -7,3 +7,4 @@ authors = ["Lucio Franco <lucio.franco@du.edu>"]
 [dependencies]
 getopts = "0.2"
 walkdir = "0.1.5"
+clippy = {version="*", optional=true}

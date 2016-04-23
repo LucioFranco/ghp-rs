@@ -84,7 +84,7 @@ impl Import {
         try!(self.write(&format!("data {}\n{}\n", message.len(), message)));
 
         if let Ok(rev) = self.get_prev_commit() {
-            if rev.len() > 0 {
+            if rev.is_empty() {
                 try!(self.write(&format!("from {}\n", &*rev.replace("\n", ""))));
             }
         }
@@ -123,15 +123,15 @@ impl Import {
 
         try!(self.write(&format!("data {}\n", metadata.len())));
 
-        let mut bytes = {
+        let bytes = {
             let mut bytes = vec![0u8; metadata.len() as usize];
             try!(file.read(&mut bytes));
             bytes
         };
 
-        try!(self.stdin.write(&mut bytes));
+        try!(self.stdin.write(&bytes));
 
-        try!(self.write(&format!("\n")));
+        try!(self.write("\n"));
 
         Ok(())
     }
