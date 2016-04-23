@@ -11,7 +11,7 @@ script:
 - if [[ "$(rustc --version)" =~ -(dev|nightly) ]]; then cargo build -v --features
   clippy; else cargo build -v; fi && cd tests && ./test.sh
 - cargo doc
-- echo "<meta http-equiv=refresh content=0;url=ghp/index.html>" > target/doc/index.html
+- touch target/doc/index.html && echo "<meta http-equiv=refresh content=0;url=ghp/index.html>" > target/doc/index.html
 
 after_success: |
   echo $TRAVIS_RUST_VERSION &&
