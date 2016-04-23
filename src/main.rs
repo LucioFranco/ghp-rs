@@ -68,6 +68,10 @@ fn main() {
         process::exit(0);
     }
 
+    let message = match matches.opt_str("m") {
+        Some(msg) => msg,
+        None => String::from("ghp import"),
+    };
 
     let branch = match matches.opt_str("b") {
         Some(path) => path,
@@ -79,7 +83,7 @@ fn main() {
         process::exit(1);
     }
 
-    match import::import_dir(&matches.free[0], &branch) {
+    match import::import_dir(&matches.free[0], &branch, &message) {
         Ok(_) => {
             // TODO: add push
 

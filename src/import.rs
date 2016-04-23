@@ -6,7 +6,7 @@ use std::fs::File;
 use std::os::unix::fs::PermissionsExt;
 use walkdir::WalkDir;
 
-pub fn import_dir<P>(dir: P, branch: &str) -> Result<()>
+pub fn import_dir<P>(dir: P, branch: &str, message: &str) -> Result<()>
     where P: AsRef<Path> + Clone
 {
     println!("{:?} to {:?}", dir.as_ref(), branch);
@@ -24,7 +24,7 @@ pub fn import_dir<P>(dir: P, branch: &str) -> Result<()>
         None => return Err(Error::from("did not capture stdin")),
     };
 
-    try!(Import::new(stdin, branch, &dir, "imported").import());
+    try!(Import::new(stdin, branch, &dir, message).import());
 
 
     try!(cmd.kill());
