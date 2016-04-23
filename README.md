@@ -33,7 +33,7 @@ ghp build # move content of build folder to gh-pages branch
 ghp --branch website build # will move the contents of the build folder to the website branch
 ```
 
-## Programtic Usage
+## Programatic Usage
 ```
 extern crate ghp;
 use ghp::import_dir;
