@@ -9,8 +9,6 @@ use walkdir::WalkDir;
 pub fn import_dir<P>(dir: P, branch: &str, message: &str) -> Result<()>
     where P: AsRef<Path> + Clone
 {
-    // println!("{:?} to {:?}", dir.as_ref(), branch);
-
     let mut cmd = try!(Command::new("git")
                            .arg("fast-import")
                            .arg("--date-format=now")
@@ -25,7 +23,6 @@ pub fn import_dir<P>(dir: P, branch: &str, message: &str) -> Result<()>
     };
 
     try!(Import::new(stdin, branch, &dir, message).import());
-
 
     try!(cmd.kill());
 
@@ -155,7 +152,6 @@ impl Import {
         let output = try!(Command::new("git")
                               .arg("config")
                               .arg(key)
-                              .current_dir(&self.dir)
                               .output());
 
         Ok(try!(String::from_utf8(output.stdout)))

@@ -51,7 +51,7 @@ fn main() {
     let matches = match opts.parse(&args[1..]) {
         Ok(m) => m,
         Err(f) => {
-            write_stderr(&format!("This error should not be happening. Please submit and issue \
+            write_stderr(&format!("This error should not be happening. Please submit an issue \
                                    on github :)\n\"{}\"",
                                   f));
             process::exit(1);

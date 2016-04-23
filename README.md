@@ -8,7 +8,7 @@ I wrote this tool to help people who want to host documentation or anything on a
 
 ### Via Cargo
 
-```
+```bash
 cargo install ghp
 ```
 
@@ -17,13 +17,13 @@ Coming Soon!
 
 ### Via Git
 
-```
+```bash
 git clone https://github.com/LucioFranco/ghp-rs
 cargo build
 ```
 
 ## Command Line Usage
-```
+```bash
 ghp [OPTIONS] DIRECTORY
 
 # Example
@@ -34,11 +34,23 @@ ghp --branch website build # will move the contents of the build folder to the w
 ```
 
 ## Programtic Usage
-```
+```rust
 extern crate ghp;
 use ghp::import_dir;
 
-import_dir("build", "gh-pages").unwrap();
+import_dir("build", "gh-pages", "commit message").unwrap();
+```
+
+## Travis Setup
+```yaml
+after_success: |
+  [ $TRAVIS_RUST_VERSION = stable ] &&
+  [ $TRAVIS_BRANCH = master ] &&
+  [ $TRAVIS_PULL_REQUEST = false ] &&  
+  ghp target/doc &&
+  git config user.name "Travis Documentation" &&
+  git config user.email "name@example.com" &&
+  git push -fq https://${GH_TOKEN}@github.com/${TRAVIS_REPO_SLUG}.git gh-pages
 ```
 
 ## License
