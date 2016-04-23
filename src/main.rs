@@ -35,7 +35,6 @@ fn main() {
                 "branch",
                 "set branch that the files will be imported to. Default: gh-pages",
                 "BRANCH");
-    // TODO: Add -r remote name, -p push to remote , -m commit message, -f force push
     opts.optopt("p",
                 "push",
                 "push to specific remote. Default: origin",
