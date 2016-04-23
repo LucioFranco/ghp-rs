@@ -12,4 +12,4 @@ matrix:
 
 script:
   - cargo build -v
-  - ./tests/test.sh
+  - cd tests && ./test.sh
