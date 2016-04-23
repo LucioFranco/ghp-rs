@@ -31,10 +31,10 @@ echo "# bash file" > build/run.sh
 chmod +x build/run.sh
 
 echo "Running command \"ghp build\"..."
-../../target/debug/ghp build
+../../target/debug/ghp build -b test-branch
 
 rm -rf build
-git checkout gh-pages
+git checkout test-branch
 check_branch
 
 cd ..
