@@ -33,6 +33,7 @@ chmod +x build/run.sh
 echo "Running command \"ghp build\"..."
 ../../target/debug/ghp build -b test-branch
 
+sleep 2
 rm -rf build
 git checkout test-branch
 check_branch
