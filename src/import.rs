@@ -16,7 +16,6 @@ pub fn import_dir<P>(dir: P, branch: &str) -> Result<()>
                            .arg("--date-format=now")
                            .arg("--quiet")
                            .stdin(Stdio::piped())
-                           .current_dir(&dir)
                            .spawn());
 
 
@@ -53,6 +52,8 @@ impl Import {
     }
 
     pub fn import(&mut self) -> Result<()> {
+        // TODO: Check if in git repo
+
         try!(self.start_commit());
 
         for entry in WalkDir::new(&self.dir) {
@@ -137,7 +138,6 @@ impl Import {
 
     fn get_prev_commit(&self) -> Result<String> {
         let output = try!(Command::new("git")
-                              .current_dir(&self.dir)
                               .arg("rev-list")
                               .arg("--max-count=1")
                               .arg(&self.branch)

@@ -10,6 +10,7 @@ use std::io::{Write, stderr};
 use std::error::Error;
 
 mod import;
+mod push;
 mod error;
 
 fn print_version() {
@@ -32,10 +33,19 @@ fn main() {
 
     opts.optopt("b",
                 "branch",
-                "set branch that the files will be imported to",
-                "gh-pages");
+                "set branch that the files will be imported to. Default: gh-pages",
+                "BRANCH");
     // TODO: Add -r remote name, -p push to remote , -m commit message, -f force push
+    opts.optopt("p",
+                "push",
+                "push to specific remote. Default: origin",
+                "REMOTE");
+    opts.optopt("m",
+                "message",
+                "git commit message. Default: ghp import",
+                "MESSAGE");
 
+    opts.optflag("f", "force", "git force push to branch");
     opts.optflag("h", "help", "print the help menu");
     opts.optflag("v", "version", "print current version number");
 
@@ -50,7 +60,7 @@ fn main() {
     };
 
     if matches.opt_present("h") {
-        println!("help message");
+        print_usage(opts);
         process::exit(0);
     }
 
@@ -71,10 +81,15 @@ fn main() {
     }
 
     match import::import_dir(&matches.free[0], &branch) {
+        Ok(_) => {
+            // TODO: add push
+
+            process::exit(0);
+        }
+
         Err(ref err) => {
             write_stderr(err.description());
             process::exit(1);
         }
-        _ => process::exit(0),
     }
 }
