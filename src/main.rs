@@ -7,6 +7,7 @@ use getopts::Options;
 
 use std::{env, process};
 use std::io::{Write, stderr};
+use std::error::Error;
 
 mod import;
 mod error;
@@ -20,9 +21,12 @@ fn print_usage(opt: Options) {
     println!("{}", opt.usage(usage));
 }
 
+fn write_stderr(err: &str) {
+    stderr().write_fmt(format_args!("Error: {}\n", err)).unwrap();
+}
+
 fn main() {
     let args: Vec<String> = env::args().collect();
-    let program = args[0].clone();
 
     let mut opts = Options::new();
 
@@ -35,11 +39,14 @@ fn main() {
     opts.optflag("h", "help", "print the help menu");
     opts.optflag("v", "version", "print current version number");
 
-    // TODO: Handle this with a better error message that
-    //         will direct people to the gh issues of the project.
     let matches = match opts.parse(&args[1..]) {
         Ok(m) => m,
-        Err(f) => panic!(f.to_string()),
+        Err(f) => {
+            write_stderr(&format!("This error should not be happening. Please submit and issue \
+                                   on github :)\n\"{}\"",
+                                  f));
+            process::exit(1);
+        }
     };
 
     if matches.opt_present("h") {
@@ -65,7 +72,7 @@ fn main() {
 
     match import::import_dir(&matches.free[0], &branch) {
         Err(ref err) => {
-            stderr().write_fmt(format_args!("Error: {}\n", err)).unwrap();
+            write_stderr(err.description());
             process::exit(1);
         }
         _ => process::exit(0),

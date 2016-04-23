@@ -20,15 +20,14 @@ pub fn import_dir<P>(dir: P, branch: &str) -> Result<()>
                            .spawn());
 
 
-    let mut stdin = match cmd.stdin.take() {
+    let stdin = match cmd.stdin.take() {
         Some(buf) => buf,
         None => return Err(Error::from("did not capture stdin")),
     };
 
-    let mut import = Import::new(stdin, branch, &dir);
-    try!(import.import());
+    try!(Import::new(stdin, branch, &dir, "imported").import());
 
-    println!("done");
+
     try!(cmd.kill());
 
     Ok(())
@@ -37,16 +36,18 @@ pub fn import_dir<P>(dir: P, branch: &str) -> Result<()>
 struct Import {
     stdin: ChildStdin,
     branch: String,
+    message: String,
     dir: PathBuf,
 }
 
 impl Import {
-    pub fn new<P>(stdin: ChildStdin, branch: &str, dir: P) -> Import
+    pub fn new<P>(stdin: ChildStdin, branch: &str, dir: P, message: &str) -> Import
         where P: AsRef<Path>
     {
         Import {
             stdin: stdin,
             branch: branch.to_owned(),
+            message: message.to_owned(),
             dir: dir.as_ref().to_owned(),
         }
     }
@@ -58,12 +59,12 @@ impl Import {
             let entry = entry.unwrap(); // TODO: Clean up unwrap
             if entry.metadata().unwrap().is_file() {
                 // TODO: Should make this a trace log and not a just a println
-                println!("adding {}", entry.path().display());
-                self.add_file(entry.path());
+                // println!("adding {}", entry.path().display());
+                try!(self.add_file(entry.path()));
             }
         }
 
-        self.stdin.write("\n".as_bytes());
+        try!(self.stdin.write("\n".as_bytes()));
 
         Ok(())
     }
@@ -71,15 +72,15 @@ impl Import {
     fn start_commit(&mut self) -> Result<()> {
         let name = try!(self.get_config("user.name"));
         let email = try!(self.get_config("user.email"));
-        let branch = self.branch.clone(); // TODO: find way to clean up clone
+        let branch = self.branch.clone();
+        let message = self.message.clone();
 
-        self.write(&format!("commit refs/heads/{}\n", branch));
-        self.write(&format!("committer {} <{}> now\n",
-                            &*name.replace("\n", ""),
-                            &*email.replace("\n", "")));
+        try!(self.write(&format!("commit refs/heads/{}\n", branch)));
+        try!(self.write(&format!("committer {} <{}> now\n",
+                                 &*name.replace("\n", ""),
+                                 &*email.replace("\n", ""))));
 
-        let message = "Message for days.";
-        self.write(&format!("data {}\n{}\n", message.len(), message));
+        try!(self.write(&format!("data {}\n{}\n", message.len(), message)));
 
         if let Ok(rev) = self.get_prev_commit() {
             if rev.len() > 0 {
@@ -112,7 +113,6 @@ impl Import {
         let mut file = try!(File::open(filename));
         let metadata = try!(file.metadata());
         let permissions = metadata.permissions();
-        println!("{:o}", (permissions.mode() & 0o700));
 
         if permissions.mode() & 0o700 == 0o700 {
             try!(self.write(&format!("M 100755 inline {}\n", filename_str)));
@@ -122,8 +122,12 @@ impl Import {
 
         try!(self.write(&format!("data {}\n", metadata.len())));
 
-        let mut bytes = vec![0u8; metadata.len() as usize];
-        try!(file.read(&mut bytes));
+        let mut bytes = {
+            let mut bytes = vec![0u8; metadata.len() as usize];
+            try!(file.read(&mut bytes));
+            bytes
+        };
+
         try!(self.stdin.write(&mut bytes));
 
         try!(self.write(&format!("\n")));
