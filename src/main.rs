@@ -35,16 +35,16 @@ fn main() {
                 "branch",
                 "set branch that the files will be imported to. Default: gh-pages",
                 "BRANCH");
-    opts.optopt("p",
+    /*opts.optopt("p",
                 "push",
                 "push to specific remote. Default: origin",
-                "REMOTE");
+                "REMOTE");*/
     opts.optopt("m",
                 "message",
                 "git commit message. Default: ghp import",
                 "MESSAGE");
 
-    opts.optflag("f", "force", "git force push to branch");
+    //opts.optflag("f", "force", "git force push to branch");
     opts.optflag("h", "help", "print the help menu");
     opts.optflag("v", "version", "print current version number");
 
