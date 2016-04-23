@@ -1,4 +1,4 @@
-# ghp-rs
+# ghp-rs [![Build Status](https://travis-ci.org/LucioFranco/ghp-rs.svg?branch=master)](https://travis-ci.org/LucioFranco/ghp-rs)
 Easily import a folder to your gh-pages branch!
 
 ## Why?
