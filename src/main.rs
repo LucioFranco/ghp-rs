@@ -86,7 +86,6 @@ fn main() {
     match import::import_dir(&matches.free[0], &branch, &message) {
         Ok(_) => {
             // TODO: add push
-
             process::exit(0);
         }
 
