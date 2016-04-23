@@ -19,7 +19,7 @@ fn print_version() {
 
 fn print_usage(opt: Options) {
     let usage = "ghp [OPTIONS] DIRECTORY";
-    println!("{}", opt.usage(usage));
+    println!("{}", opt.usage(&usage));
 }
 
 fn write_stderr(err: &str) {

@@ -1,5 +1,6 @@
 #![deny(warnings)]
-#![cfg_attr(feature="nightly", plugin(clippy))] // clippy runs in nightly
+#![cfg_attr(feature="clippy", feature(plugin))]
+#![cfg_attr(feature="clippy", plugin(clippy))]
 
 extern crate walkdir;
 

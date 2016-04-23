@@ -11,5 +11,6 @@ matrix:
     - rust: nightly
 
 script:
-  - cargo build -v
+  - if [[ "$(rustc --version)" =~ -(dev|nightly) ]]; then cargo build -v --features clippy; else ! cargo build; fi
+  - cargo doc
   - cd tests && ./test.sh
