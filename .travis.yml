@@ -9,14 +9,14 @@ matrix:
   - rust: nightly
 script:
 - if [[ "$(rustc --version)" =~ -(dev|nightly) ]]; then cargo build -v --features
-  clippy; else cargo build -v; fi && cd tests && ./test.sh
+  clippy; else cargo build -v; fi && cd tests && ./test.sh && cd ..
 - cargo doc
-- ls # && echo "<meta http-equiv=refresh content=0;url=ghp/index.html>" > target/doc/index.html
 
 after_success: |
-  echo $TRAVIS_RUST_VERSION &&
+  [ $TRAVIS_RUST_VERSION = stable ] &&
   [ $TRAVIS_BRANCH = master ] &&
   [ $TRAVIS_PULL_REQUEST = false ] &&
+   echo "<meta http-equiv=refresh content=0;url=ghp/index.html>" > target/doc/index.html &&
   ./target/debug/ghp target/doc &&
   git config user.name "Travis Documentation" &&
   git config user.email "lucio.franco@du.edu" &&
