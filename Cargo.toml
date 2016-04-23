@@ -4,6 +4,10 @@ version = "0.1.0"
 license = "MIT/Apache-2.0"
 authors = ["Lucio Franco <lucio.franco@du.edu>"]
 
+[[bin]]
+doc = false
+name = "ghp"
+
 [dependencies]
 getopts = "0.2"
 walkdir = "0.1.5"
