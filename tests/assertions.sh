@@ -1,5 +1,5 @@
 function check_branch() {
-    echo "\nChecking files..."
+    echo "Checking files..."
     
     if [ -f bundle.js ] && [ -f run.sh ]
     then

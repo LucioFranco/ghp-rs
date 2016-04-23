@@ -7,7 +7,7 @@ echo "Creating tmp directory..."
 mkdir tmp
 cd tmp
 
-echo "\nAdding files..."
+echo "Adding files..."
 
 echo "build" > .gitignore
 echo "<html></html>" > index.html
@@ -17,6 +17,9 @@ echo "// main css file" > css/main.css
 echo "Creating git repo with files..."
 
 git init > /dev/null
+git config user.name "Test Script"
+git config user.email "lucio.franco@du.edu"
+
 git add --all
 git commit -m "inital commit" > /dev/null
 

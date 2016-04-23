@@ -9,7 +9,7 @@ use walkdir::WalkDir;
 pub fn import_dir<P>(dir: P, branch: &str, message: &str) -> Result<()>
     where P: AsRef<Path> + Clone
 {
-    println!("{:?} to {:?}", dir.as_ref(), branch);
+    // println!("{:?} to {:?}", dir.as_ref(), branch);
 
     let mut cmd = try!(Command::new("git")
                            .arg("fast-import")
