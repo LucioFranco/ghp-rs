@@ -1,15 +1,26 @@
 sudo: false
 language: rust
-
 rust:
-  - stable
-  - beta
-  - nightly
-
+- stable
+- beta
+- nightly
 matrix:
   allow_failures:
-    - rust: nightly
-
+  - rust: nightly
 script:
-  - if [[ "$(rustc --version)" =~ -(dev|nightly) ]]; then cargo build -v --features clippy; else cargo build -v; fi && cd tests && ./test.sh
-  - cargo doc
+- if [[ "$(rustc --version)" =~ -(dev|nightly) ]]; then cargo build -v --features
+  clippy; else cargo build -v; fi && cd tests && ./test.sh
+- cargo doc
+
+after_success: |
+  [ $TRAVIS_BRANCH = master ] &&
+  [ $TRAVIS_PULL_REQUEST = false ] &&
+  echo "<meta http-equiv=refresh content=0;url=ghp/index.html>" > target/doc/index.html &&
+  ./target/debug/ghp target/doc &&
+  git config user.name "Travis Documentation" &&
+  git config user.email "lucio.franco@du.edu" &&
+  git push -fq https://${GH_TOKEN}@github.com/${TRAVIS_REPO_SLUG}.git gh-pages
+  
+env:
+  global:
+    secure: NDBJ8jseuc3P2O4v8GhvCI4jQDSS5FUtynBr4En9JF4Bhi+g9j4RFVVP/l9yvLYgZm3s3dna1C3uURIaQPe0uesTxh4DBc4+vJ6jQZi8SzukxnQvRWwRAHV4hnmUhWf6XIcZ29vRe+8XpR8fUhdkzHf2uAaJZsbK35fKknu81+crzvBSccTmVsHWxRngMsTL86t0GnI2eB7yBqijXZkNVBJfQhj1dvc1rxD0uXptlut5obSnLpLU4Pm6vDnd95IIoXNO/l3BISBk/FYnyZM40V/f73OIGyB8S2rVQSopLmxN5RAnlnJmT4DPt3t/3PdcOVlu8lyWy+rUpDqjXc2vm5S3RwMSiA1h+Y9cyjrbA9OOvv+HJReyTqryU3nYuTGLczJcTmrTw0WJcUe52Zfy06+wHwGH2Rltc4y8qATqMiFD0gll//RxnqcMEeiDNCbRxakFNZZzL9x/FmQkfxC0zEJoYE23wlwRpXIIm9z/dyr4tPrOoCKA7CAEXf3Tf3ECfio/pvZeiGgWFlOok4rCQ+kfRBBlZ6uNOB0bvV/HMihGkZ57HSUSi2KVTdnvT8mM2x9KD/j803HxltyPi1ZRzkM07Jgc128yNlfRVD6+nBM0aM9MZDYPNrJOE68WRqnvDrdX7hkDO+JoLB6qv7mkYYINo+E+afz52wbcVjNyFGE=
