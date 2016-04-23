@@ -1,4 +1,4 @@
-# ghp-rs [![Build Status](https://travis-ci.org/LucioFranco/ghp-rs.svg?branch=master)](https://travis-ci.org/LucioFranco/ghp-rs)
+# ghp-rs [![Build Status](https://travis-ci.org/LucioFranco/ghp-rs.svg?branch=master)](https://travis-ci.org/LucioFranco/ghp-rs) [![Crates.io](https://img.shields.io/crates/v/ghp.svg?maxAge=2592000)]() [![license](https://img.shields.io/github/license/LucioFranco/ghp-rs.svg?maxAge=2592000)]()
 Easily import a folder to your gh-pages branch!
 
 ## Why?
