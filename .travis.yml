@@ -12,3 +12,4 @@ matrix:
 
 script:
   - if [[ "$(rustc --version)" =~ -(dev|nightly) ]]; then cargo build -v --features clippy; else cargo build -v; fi && cd tests && ./test.sh
+  - cargo doc
