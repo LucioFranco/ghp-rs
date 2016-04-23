@@ -84,7 +84,7 @@ impl Import {
         try!(self.write(&format!("data {}\n{}\n", message.len(), message)));
 
         if let Ok(rev) = self.get_prev_commit() {
-            if rev.is_empty() {
+            if rev.len() > 4 {
                 try!(self.write(&format!("from {}\n", &*rev.replace("\n", ""))));
             }
         }
