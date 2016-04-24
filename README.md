@@ -23,7 +23,7 @@ Coming Soon!
 ```bash
 git clone https://github.com/LucioFranco/ghp-rs
 cargo build --release
-export PATH="$PATH:/path/to/ghp-rs"
+export PATH="$PATH:/path/to/ghp-rs/target/release/"
 ```
 
 ## Command Line Usage
