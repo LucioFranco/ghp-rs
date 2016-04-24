@@ -6,6 +6,9 @@
 #![cfg_attr(feature="clippy", feature(plugin))]
 #![cfg_attr(feature="clippy", plugin(clippy))]
 
+//! `ghp-rs` was was created for the easy of moving any folder to
+//! any branch.
+
 extern crate walkdir;
 
 mod import;

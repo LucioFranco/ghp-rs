@@ -6,6 +6,8 @@ use std::fs::File;
 use std::os::unix::fs::PermissionsExt;
 use walkdir::WalkDir;
 
+/// `import_dir` takes a directory, a branch and a message and will create a commit on that branch
+/// with the contents of the directory.
 pub fn import_dir<P>(dir: P, branch: &str, message: &str) -> Result<()>
     where P: AsRef<Path> + Clone
 {

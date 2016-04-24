@@ -5,6 +5,7 @@ use std::borrow::Cow;
 pub type Result<T> = result::Result<T, Error>;
 
 #[derive(Debug)]
+/// `Error` just neatly wraps the other errors used in the import.
 pub enum Error {
     Io(io::Error),
     FromUtf8(FromUtf8Error),
