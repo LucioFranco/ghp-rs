@@ -4,6 +4,8 @@ version = "0.1.0"
 license = "MIT/Apache-2.0"
 authors = ["Lucio Franco <lucio.franco@du.edu>"]
 
+description="Import a folder to gh-pages branch easily!"
+
 documentation = "https://luciofran.co/ghp-rs"
 repository = "https://github.com/LucioFranco/ghp-rs"
 
