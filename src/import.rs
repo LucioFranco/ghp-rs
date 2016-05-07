@@ -3,7 +3,7 @@ use std::process::{Command, Stdio, ChildStdin};
 use std::io::{Write, Read};
 use error::{Result, Error};
 use std::fs::File;
-use std::os::unix::fs::PermissionsExt;
+use std::fs::Permissions;
 use walkdir::WalkDir;
 
 /// `import_dir` takes a directory, a branch and a message and will create a commit on that branch
@@ -29,6 +29,17 @@ pub fn import_dir<P>(dir: P, branch: &str, message: &str) -> Result<()>
     try!(cmd.kill());
 
     Ok(())
+}
+
+#[cfg(unix)]
+fn is_executable(permissions: &Permissions) -> bool {
+		use std::os::unix::fs::PermissionsExt;
+		permissions.mode() & 0o700 == 0o700
+}
+
+#[cfg(windows)]
+fn is_executable(_: &Permissions) -> bool {
+		false
 }
 
 struct Import {
@@ -112,9 +123,8 @@ impl Import {
 
         let mut file = try!(File::open(filename));
         let metadata = try!(file.metadata());
-        let permissions = metadata.permissions();
 
-        if permissions.mode() & 0o700 == 0o700 {
+        if is_executable(&metadata.permissions()) {
             try!(self.write(&format!("M 100755 inline {}\n", filename_str)));
         } else {
             try!(self.write(&format!("M 100644 inline {}\n", filename_str)));
