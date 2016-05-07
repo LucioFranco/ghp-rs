@@ -32,13 +32,13 @@ pub fn import_dir<P>(dir: P, branch: &str, message: &str) -> Result<()>
 
 #[cfg(unix)]
 fn is_executable(permissions: &std::fs::Permissions) -> bool {
-	use std::os::unix::fs::PermissionsExt;
-	permissions.mode() & 0o700 == 0o700
+		use std::os::unix::fs::PermissionsExt;
+		permissions.mode() & 0o700 == 0o700
 }
 
 #[cfg(windows)]
 fn is_executable(_: &::std::fs::Permissions) -> bool {
-	false
+		false
 }
 
 struct Import {
