@@ -3,6 +3,7 @@ use std::process::{Command, Stdio, ChildStdin};
 use std::io::{Write, Read};
 use error::{Result, Error};
 use std::fs::File;
+use std::fs::Permissions;
 use walkdir::WalkDir;
 
 /// `import_dir` takes a directory, a branch and a message and will create a commit on that branch
@@ -31,13 +32,13 @@ pub fn import_dir<P>(dir: P, branch: &str, message: &str) -> Result<()>
 }
 
 #[cfg(unix)]
-fn is_executable(permissions: &std::fs::Permissions) -> bool {
+fn is_executable(permissions: &Permissions) -> bool {
 		use std::os::unix::fs::PermissionsExt;
 		permissions.mode() & 0o700 == 0o700
 }
 
 #[cfg(windows)]
-fn is_executable(_: &::std::fs::Permissions) -> bool {
+fn is_executable(_: &Permissions) -> bool {
 		false
 }
 
