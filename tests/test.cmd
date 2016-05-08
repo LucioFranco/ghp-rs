@@ -26,7 +26,8 @@ echo // a bunch of js bs > build/bundle.js
 echo # bash file > build/run.sh
 
 echo Running command "ghp build"...
-..\..\target\debug\ghp build -b test-branch
+dir ../../target/debug
+../../target/debug/ghp build -b test-branch
 
 call git branch
 call git status
