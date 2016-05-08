@@ -12,12 +12,12 @@ echo // main css file > css/main.css
 
 echo Creating git repo with files...
 
-call git init > NUL
+call git init
 call git config user.name "Test Script"
 call git config user.email "lucio.franco@du.edu"
 
 call git add --all
-call git commit -m "inital commit" > NUL
+call git commit -m "inital commit"
 
 echo Creating build folder and files...
 
@@ -27,6 +27,9 @@ echo # bash file > build/run.sh
 
 echo Running command "ghp build"...
 ..\..\target\debug\ghp build -b test-branch
+
+call git branch
+call git status
 
 echo Checking out "test-branch"...
 sleep 2

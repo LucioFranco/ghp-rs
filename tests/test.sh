@@ -32,6 +32,11 @@ chmod +x build/run.sh
 
 echo "Running command \"ghp build\"..."
 ../../target/debug/ghp build -b test-branch
+if [ $? -ne 0 ]
+then
+  echo "ghp command failed"
+  exit 1
+fi
 
 sleep 2
 rm -rf build
