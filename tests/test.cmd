@@ -24,11 +24,9 @@ echo Creating build folder and files...
 mkdir build
 echo // a bunch of js bs > build/bundle.js
 echo # bash file > build/run.sh
-@pause
 
 echo Running command "ghp build"...
 ..\..\target\debug\ghp build -b test-branch
-@pause
 
 sleep 2
 rm -rf build
