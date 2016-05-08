@@ -12,12 +12,12 @@ echo // main css file > css/main.css
 
 echo Creating git repo with files...
 
-call git init
+call git init > NIL
 call git config user.name "Test Script"
 call git config user.email "lucio.franco@du.edu"
 
 call git add --all
-call git commit -m "inital commit"
+call git commit -m "inital commit" > NIL
 
 echo Creating build folder and files...
 
