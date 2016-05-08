@@ -28,6 +28,7 @@ echo # bash file > build/run.sh
 echo Running command "ghp build"...
 ..\..\target\debug\ghp build -b test-branch
 
+echo Checking out "test-branch"...
 sleep 2
 rm -rf build
 call git checkout test-branch
