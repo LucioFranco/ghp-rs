@@ -12,12 +12,12 @@ echo // main css file > css/main.css
 
 echo Creating git repo with files...
 
-call git init > NIL
+call git init
 call git config user.name "Test Script"
 call git config user.email "lucio.franco@du.edu"
 
 call git add --all
-call git commit -m "inital commit" > NIL
+call git commit -m "inital commit"
 
 echo Creating build folder and files...
 
@@ -27,6 +27,10 @@ echo # bash file > build/run.sh
 
 echo Running command "ghp build"...
 cargo run -- build -b test-branch
+if not errorlevel 1
+echo An error occured with ghp command
+exit 1
+:end
 
 call git branch
 call git status
