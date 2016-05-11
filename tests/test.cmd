@@ -12,12 +12,13 @@ echo // main css file > css/main.css
 
 echo Creating git repo with files...
 
-call git init
+call git init > NUL
 call git config user.name "Test Script"
 call git config user.email "lucio.franco@du.edu"
+call git config core.autocrlf true
 
 call git add --all
-call git commit -m "inital commit"
+call git commit -m "inital commit" > NUL
 
 echo Creating build folder and files...
 
@@ -26,24 +27,22 @@ echo // a bunch of js bs > build/bundle.js
 echo # bash file > build/run.sh
 
 echo Running command "ghp build"...
-cargo run -- build -b test-branch
-if not errorlevel 1
-echo An error occured with ghp command
-exit 1
-:end
+..\..\target\debug\ghp build -b test-branch
 
-call git branch
+call git branch -a
 call git status
 
+call :sleep 2
+rmdir /s /q build
+
 echo Checking out "test-branch"...
-sleep 2
-rm -rf build
 call git checkout test-branch
 
+echo Verify branch:
 call :check_branch
 
 cd ..
-rm -rf tmp
+rmdir /s /q tmp
 
 exit 0
 
@@ -51,3 +50,7 @@ exit 0
 if exist bundle.js echo Passed test #1 && exit /b 0
 echo Failed test #1: could not find bundle.js in gh-pages branch
 exit 1
+
+:sleep
+ping -n %1 127.0.0.1 > NUL
+exit /b 0
