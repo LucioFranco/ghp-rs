@@ -5,7 +5,7 @@ Easily import a folder to your gh-pages branch!
 I wrote this tool to help people who want to host documentation or anything on a `gh-pages` branch. This was heavily influenced by [ghp-import](https://github.com/davisp/ghp-import) and has a similar implementation.
 
 ## Documentation
-The documentation can be found [here](https://luciofran.co/ghp-rs). The documentation is powered by `cargo doc` and `ghp-rs`. Check out the [.travis.yml](https://github.com/LucioFranco/ghp-rs/blob/master/.travis.yml) and the [travis setup](https://github.com/LucioFranco/ghp-rs#travis-setup) for an example of how to use `ghp-rs` with `rustdoc`.
+The documentation can be found [here](https://docs.rs/ghp). The documentation is powered by `cargo doc` and `ghp-rs`. Check out the [.travis.yml](https://github.com/LucioFranco/ghp-rs/blob/master/.travis.yml) and the [travis setup](https://github.com/LucioFranco/ghp-rs#travis-setup) for an example of how to use `ghp-rs` with `rustdoc`.
 
 ## Install
 
